@@ -1,0 +1,18 @@
+﻿<Window
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	x:Class="Witty.Window1"
+	x:Name="Window"
+	Title="Window1"
+	Width="640" Height="480" xmlns:d="http://schemas.microsoft.com/expression/blend/2006" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d">
+
+	<Grid x:Name="LayoutRoot">
+		<Rectangle Margin="279.202,47.688,153.659,0" VerticalAlignment="Top" Height="55.949" Stroke="#FF000000" Fill="{DynamicResource PrimaryBackgroundBrush}"/>
+		<Rectangle Margin="279.202,171.867,153.659,220.184" Stroke="#FF000000" Fill="{DynamicResource SecondaryBackgroundBrush}"/>
+		<Rectangle Margin="279.202,0,153.659,98.734" Stroke="#FF000000" Fill="{DynamicResource StatusBackgroundBrush}" VerticalAlignment="Bottom" Height="55.949"/>
+		<TextBlock HorizontalAlignment="Left" VerticalAlignment="Top" Text="Primary Background" TextWrapping="Wrap" FontSize="18" Margin="42.303,47.688,0,0"/>
+		<TextBlock HorizontalAlignment="Left" Text="Secondary Background" TextWrapping="Wrap" FontSize="18" Margin="42.303,171.867,0,0" d:LayoutOverrides="Height" VerticalAlignment="Top"/>
+		<TextBlock HorizontalAlignment="Left" Text="Status Background" TextWrapping="Wrap" FontSize="18" Margin="42.303,0,0,130.743" d:LayoutOverrides="Height" VerticalAlignment="Bottom"/>
+		<Rectangle Margin="279.202,0,153.659,19" VerticalAlignment="Bottom" Height="45" Stroke="#FF000000" Fill="{DynamicResource ListHoverBrush}"/>
+	</Grid>
+</Window>

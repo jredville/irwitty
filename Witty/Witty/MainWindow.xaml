@@ -1,0 +1,314 @@
+﻿<CustomWindow:EssentialWindow 
+  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
+  xmlns:d="http://schemas.microsoft.com/expression/blend/2006" 
+  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+  xmlns:aero="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Aero"
+  xmlns:CustomWindow="clr-namespace:CustomWindow;assembly=CustomWindow"
+  mc:Ignorable="d" 
+  xmlns:TwitterLib="clr-namespace:TwitterLib;assembly=TwitterLib" 
+  xmlns:Witty="clr-namespace:Witty" 
+  xmlns:controls="clr-namespace:Common.Controls;assembly=Common" 
+  xmlns:converters="clr-namespace:Common.Converters;assembly=Common"
+  xmlns:r="clr-namespace:Microsoft.Samples.KMoore.WPFSamples.Reveal;assembly=J832.Wpf.BagOTricksLib"
+  AllowsTransparency="True" Background="Transparent" 
+  ResizeMode="CanResizeWithGrip"
+  x:Class="Witty.MainWindow" 
+  Title="Witty 2.0" 
+  Width="330" Height="570" MinWidth="200" MinHeight="200" 
+  WindowStyle="None"
+  ShowInTaskbar="True"
+  KeyDown="MainWindow_OnKeyDown" Left="800" Top="50"
+  >
+
+    <Window.Resources>
+        <ResourceDictionary>
+            <!-- Placed storyboard animations in their own file to condense the markup -->
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Resources\Storyboards.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+
+            <converters:CharRemainingValueConverter x:Key="CharRemainingConverter" />
+            <converters:CharRemainingForegroundColorConverter x:Key="CharRemainingColorConverter" />
+        </ResourceDictionary>
+    </Window.Resources>
+
+    <Window.Triggers>
+        <EventTrigger RoutedEvent="Mouse.MouseEnter" SourceName="Update">
+            <BeginStoryboard Storyboard="{StaticResource UpdateMouseEnter}" x:Name="UpdateMouseEnter_BeginStoryboard" />
+        </EventTrigger>
+        <EventTrigger RoutedEvent="Mouse.MouseLeave" SourceName="Update">
+            <BeginStoryboard Storyboard="{StaticResource UpdateMouseLeave}" x:Name="UpdateMouseLeave_BeginStoryboard" />
+        </EventTrigger>
+        <EventTrigger RoutedEvent="Mouse.MouseEnter" SourceName="Message">
+            <BeginStoryboard Storyboard="{StaticResource MessageMouseEnter}" x:Name="MessageMouseEnter_BeginStoryboard" />
+        </EventTrigger>
+        <EventTrigger RoutedEvent="Mouse.MouseLeave" SourceName="Message">
+            <BeginStoryboard Storyboard="{StaticResource MessageMouseLeave}" x:Name="MessageMouseLeave_BeginStoryboard" />
+        </EventTrigger>
+    </Window.Triggers>
+
+    <Border BorderBrush="#55FFFFFF" BorderThickness="1" CornerRadius="5">
+        <DockPanel x:Name="LayoutRoot">
+            <!-- Header -->
+            <Border DockPanel.Dock="Top" Height="40" Padding="10,0,10,0" CornerRadius="5,5,0,0" x:Name="Header" MouseMove="Header_MouseMove" Background="{DynamicResource PrimaryBackgroundBrush}">
+                <Border.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem x:Name="AlwaysOnTopMenuItem" Header="Always on Top" IsCheckable="True" Click="AlwaysOnTop_Click" IsChecked="{Binding Path=Topmost, ElementName=Window, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                    </ContextMenu>
+                </Border.ContextMenu>
+                <DockPanel LastChildFill="False">
+                    <TextBlock Text="Witty" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="18" FontWeight="Bold" Foreground="{DynamicResource HeaderForegroundBrush}" />
+                    <Border Name="WindowButtonsPlaceholder" HorizontalAlignment="Right" VerticalAlignment="Top" DockPanel.Dock="Right" Margin="0" />
+                    <Button Content="Refresh" Height="15" x:Name="RefreshButton" Click="RefreshButton_Click" IsEnabled="False" MinWidth="25" MinHeight="20" FontSize="9" DockPanel.Dock="Right" Margin="0,0,10,0" Width="50" ToolTip="Refresh Tweets" />
+                    <Button Content="Options" Height="15" x:Name="OptionsButton" Click="OptionsButton_Click" MinWidth="25" MinHeight="20" FontSize="9" DockPanel.Dock="Right" Margin="0,0,5,0" IsEnabled="True" Width="50" ToolTip="Show Options Window" />
+                    <Button Content="Console" Height="20" x:Name="ConsoleButton" Click="ConsoleButton_Click" MinWidth="25" MinHeight="20" FontSize="9" DockPanel.Dock="Right" Margin="0,0,10,0" IsEnabled="True" Width="50" ToolTip="Show Console Window" />
+
+                    <ToggleButton Content="Filter" Height="25" x:Name="FilterToggleButton" MinWidth="25" MinHeight="20" FontSize="9" IsEnabled="False" Width="55" ToolTip="Display Filter Panel" DockPanel.Dock="Right" BorderThickness="1,1,1,1" Margin="0,0,10,0" IsChecked="False" Unchecked="FilterToggleButton_Unchecked" Background="{DynamicResource NormalBrush}" Foreground="{DynamicResource LightBrush}" BorderBrush="{DynamicResource NormalBorderBrush}" Visibility="Collapsed">
+                        <ToggleButton.Clip>
+                            <RectangleGeometry Rect="3,3,50,20" RadiusX="5" RadiusY="5" />
+                        </ToggleButton.Clip>
+                    </ToggleButton>
+                </DockPanel>
+
+            </Border>
+
+            <!-- Filter  -->
+            <Border DockPanel.Dock="Top" x:Name="Filter" Background="#FFCEE8B9" IsEnabled="False">
+                <r:Reveal 
+  			VerticalReveal="FromTopToBottom" 
+  			IsExpanded="{Binding Path=IsChecked, ElementName=FilterToggleButton}" HorizontalAlignment="Left">
+                    <DockPanel Margin="0,0,5,5" VerticalAlignment="Stretch">
+                        <Label Content="Filter" Target="{Binding ElementName=FilterTextBox, Mode=OneWay}"/>
+                        <controls:FilterText x:Name="FilterTextBox" TextBoxBase.TextChanged="FilterTextBox_TextChanged" Width="150"/>
+                        <Button Content="Search with TweetScan" Height="20" Margin="10,0,0,0" x:Name="TweetScanButton" FontSize="9" Click="TweetScanButton_Click"/>
+                    </DockPanel>
+                </r:Reveal>
+            </Border>
+
+            <!-- StatusBar-->
+            <Border DockPanel.Dock="Bottom" Padding="5,2,0,2" Background="{DynamicResource StatusBackgroundBrush}" x:Name="StatusBar">
+                <DockPanel>
+                    <TextBlock DockPanel.Dock="Left" x:Name="StatusTextBlock" TextWrapping="NoWrap" Foreground="#FFE4E4E4" Text="Login" TextTrimming="CharacterEllipsis" />
+                    <!--
+                    <Thumb DockPanel.Dock="Right" DragCompleted="Thumb_DragCompleted" HorizontalAlignment="Right" Opacity="0" Cursor="SizeNWSE" />
+                    -->
+                </DockPanel>
+            </Border>
+
+            <!-- Main Content -->
+            <Grid x:Name="Content"  AllowDrop="True" PreviewDragEnter="Recent_PreviewDragOver" PreviewDragOver="Recent_PreviewDragOver" PreviewDrop="Recent_Drop" >
+                <TabControl x:Name="Tabs" IsSynchronizedWithCurrentItem="True" DockPanel.Dock="Top" SelectionChanged="Tabs_SelectionChanged">
+
+                    <!-- Recent Tab -->
+                    <TabItem Header="Recent" Padding="1,1,1,1" x:Name="RecentTab">
+                        <Grid x:Name="Recent">
+                            <ListBox x:Name="TweetsListBox" ScrollViewer.CanContentScroll="False" IsSynchronizedWithCurrentItem="True" ItemTemplate="{DynamicResource TweetsTemplate}" ItemsSource="{Binding Mode=OneWay}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" Margin="0,0,0,20" MouseLeftButtonUp="TweetsListBox_MouseLeftButtonUp" MouseRightButtonUp="TweetsListBox_MouseRightButtonUp"  BorderThickness="0,0,0,0" 
+              controls:TweetTextBlock.NameClick="NameClickedInTweet"
+              controls:TweetTextBlock.HashtagClick="HashtagClickedInTweet" >
+                                <ListBox.ContextMenu>
+                                    <ContextMenu Name="recentContextMenu">
+                                        <MenuItem Header="Reply" Click="ContextMenuReply_Click"></MenuItem>
+                                        <MenuItem Header="Reply to All" Click="ContextMenuReplyAll_Click"></MenuItem>
+                                        <MenuItem Header="Send Direct Message" Click="ContextMenuDirectMessage_Click"></MenuItem>
+                                        <MenuItem Header="Delete" Click="ContextMenuDelete_Click" IsEnabled="True"></MenuItem>
+                                        <MenuItem Header="Re-tweet" Click="ContextMenuRetweet_Click" IsEnabled="True"></MenuItem>
+                                        <MenuItem Header="View Conversation" Click="ContextMenuConversation_Click"></MenuItem>
+                                        <MenuItem Header="Refresh" Click="RefreshButton_Click"></MenuItem>
+                                        <MenuItem Header="Clear All Tweets" Click="ContextMenuClear_Click"></MenuItem>
+                                        <MenuItem Header="Temporarily Ignore User" Click="ContextMenuIgnore_Click"></MenuItem>
+
+                                    </ContextMenu>
+                                </ListBox.ContextMenu>
+                            </ListBox>
+                            <Border Height="21" Background="{StaticResource UpdateBackgroundBrush}" VerticalAlignment="Bottom" Padding="10,0,10,0" x:Name="Update" MouseLeftButtonUp="Update_MouseLeftButtonUp" BorderBrush="{DynamicResource PrimaryBackgroundBrush}" BorderThickness="0,0,0,1" ToolTip="Display tweet panel">
+                                <DockPanel OpacityMask="#FF000000" x:Name="dockPanel">
+                                    <TextBlock HorizontalAlignment="Center" DockPanel.Dock="Top" Text="Tweet" TextWrapping="Wrap" VerticalAlignment="Top" x:Name="UpdateTextBlock" Margin="0,2,0,0" />
+                                    <Grid Margin="0,2,0,0" KeyboardNavigation.TabNavigation="Cycle">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="152*" />
+                                            <ColumnDefinition Width="49*" />
+                                            <ColumnDefinition Width="Auto" />
+                                        </Grid.ColumnDefinitions>
+                                        <TextBox Text="" TextWrapping="Wrap" x:Name="TweetTextBox" SpellCheck.IsEnabled="True" ToolTip="Enter tweet (140 character limit)" PreviewKeyDown="TweetTextBox_PreviewKeyDown" 
+                                          DataObject.Pasting="TweetTextBox_OnPaste" TextChanged="TweetTextBox_TextChanged" Grid.ColumnSpan="2" Height="66" TabIndex="1" AllowDrop="True" PreviewDragEnter="Recent_PreviewDragOver" PreviewDragOver="Recent_PreviewDragOver" PreviewDrop="Recent_Drop" />
+                                        <TextBlock Text="{Binding Path=Text, Converter={StaticResource CharRemainingConverter}, ElementName=TweetTextBox, Mode=Default}" 
+								            FontSize="18" 
+								            Grid.Column="2" 
+								            VerticalAlignment="Top" 
+								            HorizontalAlignment="Left" 
+								            Margin="10,-2,0,0" 
+								            FontFamily="Georgia" 
+								            x:Name="CharRemainingCounter"                                 
+								            Foreground="{Binding Path=Text.Length, ElementName=TweetTextBox, Converter={StaticResource CharRemainingColorConverter}}" />
+                                        <Button Width="75" Height="23" Content="Update" Grid.Column="2" x:Name="UpdateButton" Click="UpdateButton_Click" Margin="10,0,0,10" IsDefault="True" ToolTip="Submit update" TabIndex="2" />
+                                        <Button VerticalAlignment="Bottom" Width="75" Height="23" Content="Cancel" Grid.Column="2" x:Name="CancelButton" Click="CancelButton_Click" Margin="10,0,0,5" ToolTip="Clear text and hide update panel" TabIndex="3" />
+                                    </Grid>
+                                </DockPanel>
+                            </Border>
+                        </Grid>
+                    </TabItem>
+
+                    <!-- Replies Tab -->
+                    <TabItem Header="Replies" Padding="2,1,2,1" x:Name="RepliesTab">
+                        <ListBox x:Name="RepliesListBox" ScrollViewer.CanContentScroll="False" IsSynchronizedWithCurrentItem="True" ItemTemplate="{DynamicResource TweetsTemplate}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" MouseLeftButtonUp="TweetsListBox_MouseLeftButtonUp" MouseRightButtonUp="RepliesListBox_MouseRightButtonUp" BorderThickness="0,0,0,0" 
+              controls:TweetTextBlock.NameClick="NameClickedInTweet"
+              controls:TweetTextBlock.HashtagClick="HashtagClickedInTweet" >
+                            <ListBox.ContextMenu>
+                                <ContextMenu Name="RepliesContextMenu">
+                                    <MenuItem Header="Reply" Click="ContextMenuReply_Click"></MenuItem>
+                                    <MenuItem Header="Reply to All" Click="ContextMenuReplyAll_Click"></MenuItem>
+                                    <MenuItem Header="Follow" Click="ContextMenuFollow_Click" IsEnabled="True"></MenuItem>
+                                    <MenuItem Header="Send Direct Message" Click="ContextMenuDirectMessage_Click"></MenuItem>
+                                    <MenuItem Header="Re-tweet" Click="ContextMenuRetweet_Click" IsEnabled="True"></MenuItem>
+                                    <MenuItem Header="View Conversation" Click="ContextMenuConversation_Click"></MenuItem>
+                                    <MenuItem Header="Refresh" Click="RefreshButton_Click"></MenuItem>
+                                    <MenuItem Header="Clear All Tweets" Click="ContextMenuClear_Click"></MenuItem>
+                                </ContextMenu>
+                            </ListBox.ContextMenu>
+                        </ListBox>
+                    </TabItem>
+
+                    <!-- User Tab -->
+                    <TabItem x:Name="UserTab" Header="User" Padding="1,1,1,1">
+                        <DockPanel>
+                            <Border DockPanel.Dock="Top" BorderBrush="{DynamicResource SolidBorderBrush}" BorderThickness="0,0,0,1">
+                                <Border.Background>
+                                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                        <GradientStop Color="#FFD0DBE7" Offset="0" />
+                                        <GradientStop Color="#FFFFFFFF" Offset="1" />
+                                    </LinearGradientBrush>
+                                </Border.Background>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="80" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <Grid VerticalAlignment="Top" HorizontalAlignment="Center" Margin="0,12,0,0" Width="58" Height="60">
+                                        <aero:SystemDropShadowChrome CornerRadius="5,5,5,5">
+                                            <Rectangle Stroke="#FF8E8E8E" RadiusX="10" RadiusY="5">
+                                                <Rectangle.Fill>
+                                                    <LinearGradientBrush EndPoint="0.869,0.837" StartPoint="0.278,0.298">
+                                                        <GradientStop Color="#FFFFFFFF" Offset="0"/>
+                                                        <GradientStop Color="#FF7BB2B7" Offset="1"/>
+                                                    </LinearGradientBrush>
+                                                </Rectangle.Fill>
+                                            </Rectangle>
+                                        </aero:SystemDropShadowChrome>
+                                        <Border BorderBrush="{DynamicResource ImageBorderBrush}" BorderThickness="1,1,1,1" Margin="4,5,4,5" CornerRadius="2,2,2,2">
+                                            <Image Width="48" Height="48" Source="{Binding Path=User.ImageUrl}" x:Name="UserImage" />
+                                        </Border>
+                                    </Grid>
+                                    <Grid Grid.Column="1" Margin="0,10,0,0">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto" />
+                                            <RowDefinition Height="*" />
+                                        </Grid.RowDefinitions>
+                                        <TextBlock Text="{Binding Path=User.FullName, FallbackValue=Full Name}" FontWeight="Bold" FontSize="16" x:Name="FullName" Cursor="Hand" MouseLeftButtonUp="ScreenName_MouseLeftButtonUp" Tag="{Binding Path=User.TwitterUrl, Mode=Default}" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" ToolTip="{Binding Path=User.TwitterUrl, Mode=Default}" d:LayoutOverrides="Width, Height" />
+                                        <DockPanel Grid.Row="1">
+                                            <TextBlock x:Name="Description" Text="{Binding Path=User.Description, Mode=Default, FallbackValue=Description}" TextWrapping="Wrap" FontStyle="Italic" DockPanel.Dock="Top" />
+                                            <TextBlock x:Name="SiteUrl" Text="{Binding Path=User.SiteUrl, Mode=Default, FallbackValue=Site Url}" TextWrapping="NoWrap" MouseLeftButtonUp="Url_MouseLeftButtonUp" Cursor="Hand" TextTrimming="CharacterEllipsis" DockPanel.Dock="Top" ToolTip="{Binding Path=User.SiteUrl, Mode=Default}" TextDecorations="Underline" Foreground="#FF0000FF"><Hyperlink NavigateUri="{Binding Path=User.SiteUrl, Mode=Default, FallbackValue=Site Url}" /></TextBlock>
+                                            <TextBlock x:Name="Location" Text="{Binding Path=User.Location, Mode=Default, FallbackValue=Location}" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" />
+                                        </DockPanel>
+                                    </Grid>
+                                </Grid>
+                            </Border>
+                            <ListBox x:Name="UserTimelineListBox" ItemsSource="{Binding Mode=OneWay}" ScrollViewer.CanContentScroll="False" IsSynchronizedWithCurrentItem="True" ItemTemplate="{DynamicResource UserTimeLineTemplate}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" MouseLeftButtonUp="TweetsListBox_MouseLeftButtonUp" MouseRightButtonUp="UserTimelineListBox_MouseRightButtonUp" BorderThickness="0,0,0,0" DockPanel.Dock="Bottom" 
+              controls:TweetTextBlock.NameClick="NameClickedInTweet"
+              controls:TweetTextBlock.HashtagClick="HashtagClickedInTweet" >
+                                <ListBox.ContextMenu>
+                                    <ContextMenu Name="UserContextMenu">
+                                        <MenuItem Header="Reply" Click="ContextMenuReply_Click"></MenuItem>
+                                        <MenuItem Header="Reply to All" Click="ContextMenuReplyAll_Click"></MenuItem>
+                                        <MenuItem Header="Follow" Click="ContextMenuFollow_Click" IsEnabled="True"></MenuItem>
+                                        <MenuItem Header="Send Direct Message" Click="ContextMenuDirectMessage_Click"></MenuItem>
+                                        <MenuItem Header="Delete" Click="ContextMenuDelete_Click" IsEnabled="True"></MenuItem>
+                                        <MenuItem Header="Re-tweet" Click="ContextMenuRetweet_Click" IsEnabled="True"></MenuItem>
+                                        <MenuItem Header="View Conversation" Click="ContextMenuConversation_Click"></MenuItem>
+                                        <MenuItem Header="Refresh" Click="RefreshButton_Click"></MenuItem>
+                                        <MenuItem Header="Clear All Tweets" Click="ContextMenuClear_Click"></MenuItem>
+
+                                    </ContextMenu>
+                                </ListBox.ContextMenu>
+                            </ListBox>
+                        </DockPanel>
+                    </TabItem>
+
+                    <!-- Messages Tab -->
+                    <TabItem Header="Messages" Padding="1,1,1,1" x:Name="MessagesTab">
+                        <Grid x:Name="Messages">
+                            <ListBox x:Name="MessagesListBox" ScrollViewer.CanContentScroll="False" IsSynchronizedWithCurrentItem="True" ItemTemplate="{DynamicResource MessagesTemplate}" ItemsSource="{Binding Mode=OneWay}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" Margin="0,0,0,20" MouseLeftButtonUp="MessagesListBox_MouseLeftButtonUp" BorderThickness="0,0,0,0"
+              controls:TweetTextBlock.NameClick="NameClickedInTweet"
+              controls:TweetTextBlock.HashtagClick="HashtagClickedInTweet" >
+                                <ListBox.ContextMenu>
+                                    <ContextMenu Name="MessagesContextMenu">
+                                        <MenuItem Header="Reply" Click="ContextMenuReply_Click"></MenuItem>
+                                        <MenuItem Header="Send Direct Message" Click="ContextMenuDirectMessage_Click"></MenuItem>
+                                        <MenuItem Header="Delete" Click="ContextMenuDeleteMessage_Click" IsEnabled="True"></MenuItem>
+                                        <MenuItem Header="Re-tweet" Click="ContextMenuRetweet_Click" IsEnabled="True"></MenuItem>
+                                    </ContextMenu>
+                                </ListBox.ContextMenu>
+                            </ListBox>
+                            <Border Height="21" Background="{StaticResource UpdateBackgroundBrush}" VerticalAlignment="Bottom" Padding="10,0,10,0" x:Name="Message" MouseLeftButtonUp="Message_MouseLeftButtonUp" BorderBrush="{DynamicResource PrimaryBackgroundBrush}" BorderThickness="0,0,0,1" CornerRadius="0,0,5,5" >
+                                <DockPanel OpacityMask="#FF000000" x:Name="MessageDockPanel">
+                                    <TextBlock HorizontalAlignment="Center" DockPanel.Dock="Top" Text="Send Message" TextWrapping="Wrap" VerticalAlignment="Top" x:Name="MessageTextBlock" Margin="0,2,0,0" />
+                                    <Grid Margin="0,5,0,0">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto" />
+                                            <RowDefinition Height="*" />
+                                        </Grid.RowDefinitions>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="Auto" />
+                                        </Grid.ColumnDefinitions>
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock Text="To:" TextWrapping="Wrap" Margin="0,0,5,0" VerticalAlignment="Center" />
+                                            <TextBox Text="" TextWrapping="Wrap" VerticalAlignment="Center" Width="120" Margin="0,0,0,2" x:Name="MessageUserTextBox" />
+                                        </StackPanel>
+                                        <TextBox Grid.Row="1" Text="" TextWrapping="Wrap" x:Name="MessageTextBox" SpellCheck.IsEnabled="True" />
+                                        <TextBlock	Grid.Row="1" 
+								Text="{Binding Path=Text, Converter={StaticResource CharRemainingConverter}, ElementName=MessageTextBox, Mode=Default}" 
+								FontSize="18" 
+								Grid.Column="1" 
+								VerticalAlignment="Top" 
+								HorizontalAlignment="Left" 
+								Margin="10,0,0,0" 
+								FontFamily="Georgia" 
+								x:Name="MessageCharRemainingCounter"
+								Foreground="{Binding Path=Text.Length, ElementName=MessageTextBox, Converter={StaticResource CharRemainingColorConverter}}" />
+                                        <Button Grid.Row="1" VerticalAlignment="Bottom" Width="75" Height="23" Content="Send" Grid.Column="1" x:Name="SendMessageButton" Click="SendMessageButton_Click" Margin="10,0,0,0" IsDefault="True" />
+                                    </Grid>
+                                </DockPanel>
+                            </Border>
+                        </Grid>
+                    </TabItem>
+                <!-- More Tab -->
+                <TabItem Header="More..." Padding="1,1,1,1" x:Name="MoreTab" LostFocus="MoreTab_LostFocus">
+                        <Grid x:Name="More">
+                            <ListBox x:Name="MoreListBox" ScrollViewer.CanContentScroll="False" IsSynchronizedWithCurrentItem="True" ItemsSource="{Binding Mode=OneWay}" ItemTemplate="{DynamicResource MoreTemplate}"  ScrollViewer.HorizontalScrollBarVisibility="Disabled" Margin="0,0,0,20"  BorderThickness="0,0,0,0"
+              controls:TweetTextBlock.NameClick="NameClickedInTweet"
+              controls:TweetTextBlock.HashtagClick="HashtagClickedInTweet" >
+                                <ListBox.ContextMenu>
+                                    <ContextMenu Name="MoreContextMenu">
+                                        <MenuItem Header="Reply" Click="ContextMenuReply_Click"></MenuItem>
+                                        <MenuItem Header="Reply to All" Click="ContextMenuReplyAll_Click"></MenuItem>
+                                        <MenuItem Header="Send Direct Message" Click="ContextMenuDirectMessage_Click"></MenuItem>
+                                        <MenuItem Header="Delete" Click="ContextMenuDelete_Click" IsEnabled="True"></MenuItem>
+                                        <MenuItem Header="Re-tweet" Click="ContextMenuRetweet_Click" IsEnabled="True"></MenuItem>
+                                        <MenuItem Header="Refresh" Click="RefreshButton_Click"></MenuItem>
+                                        <MenuItem Header="Clear All Tweets" Click="ContextMenuClear_Click"></MenuItem>
+                                        <MenuItem Header="Temporarily Ignore User" Click="ContextMenuIgnore_Click"></MenuItem>
+                                    </ContextMenu>
+                                </ListBox.ContextMenu>
+                            </ListBox>
+                        </Grid>
+                    </TabItem>
+
+                </TabControl>
+                <!-- Login Control -->
+                <Witty:LoginControl HorizontalAlignment="Center" VerticalAlignment="Center" x:Name="LoginControl" Login="LoginControl_Login" Visibility="Visible" BitmapEffect="{DynamicResource LoginBitmapEffect}"/>
+
+            </Grid>
+        </DockPanel>
+    </Border>
+</CustomWindow:EssentialWindow>

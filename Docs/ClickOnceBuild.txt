@@ -1,0 +1,7 @@
+HOW TO DO A CLICKONCE BUILD
+
+Due to a bug in Visual Studio, the ClickOnce build has to be built from the command line.
+
+Here is the command line.  Note:  This command must be run from the folder where Witty.csproj file is.
+
+msbuild /property:Configuration=Release /target:publish

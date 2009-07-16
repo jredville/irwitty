@@ -1,0 +1,21 @@
+﻿<UserControl
+  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+  xmlns:d="http://schemas.microsoft.com/expression/blend/2006"
+  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+  mc:Ignorable="d"
+  x:Class="Witty.LoginControl"
+  x:Name="UserControl"
+  Width="225" Height="270" 
+  Loaded="UserControl_Loaded">
+
+  <Border x:Name="LayoutRoot" CornerRadius="5,5,5,5" BorderBrush="{DynamicResource PrimaryBorderBrush}" BorderThickness="1,0,1,1" Background="{DynamicResource LoginBackgroundBrush}">
+    <StackPanel Width="150" VerticalAlignment="Center">
+      <Label Content="Username:"/>
+      <TextBox HorizontalAlignment="Stretch" Margin="5,0,0,0" x:Name="UsernameTextBox" TextWrapping="Wrap"/>
+      <Label Content="Password:"/>
+      <PasswordBox HorizontalAlignment="Stretch" Margin="5,0,0,0" x:Name="PasswordTextBox" Width="Auto"/>
+      <Button HorizontalAlignment="Stretch" Margin="10,15,10,0" x:Name="LoginButton" Content="Login" IsDefault="True" Click="LoginButton_Click"/>
+    </StackPanel>
+  </Border>
+</UserControl>

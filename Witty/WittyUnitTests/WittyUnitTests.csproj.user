@@ -1,0 +1,14 @@
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <StartAction>Program</StartAction>
+    <StartProgram>C:\Program Files\NUnit 2.4.6\bin\nunit.exe</StartProgram>
+    <StartWorkingDirectory>D:\Projects\Witty\WittyUnitTests\bin\Debug\</StartWorkingDirectory>
+    <StartArguments>WittyUnitTests.dll</StartArguments>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <StartProgram>C:\Program Files\NUnit 2.4.6\bin\nunit.exe</StartProgram>
+    <StartWorkingDirectory>D:\Projects\Witty\WittyUnitTests\bin\Debug\</StartWorkingDirectory>
+    <StartArguments>WittyUnitTests.dll</StartArguments>
+    <StartAction>Program</StartAction>
+  </PropertyGroup>
+</Project>

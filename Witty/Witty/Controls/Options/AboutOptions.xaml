@@ -1,0 +1,60 @@
+﻿<UserControl x:Class="Witty.Controls.Options.AboutOptions"
+  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <Grid>
+    <FlowDocumentReader>
+      <FlowDocument>
+        <Section>
+          <Paragraph Name="Version">
+            Witty v2.0
+          </Paragraph>
+          <Paragraph>
+            <Hyperlink NavigateUri="http://code.google.com/p/wittytwitter/" >Witty Google Code Page</Hyperlink>
+          </Paragraph>
+          <Paragraph>
+            <Bold>Keyboard Shortcuts</Bold>
+            <LineBreak/>
+            &#x25cf;
+            <Bold>ctrl-u</Bold> - Toggle the update area
+            <LineBreak/>
+            &#x25cf;
+            <Bold>ctrl-r</Bold> - Add @screenname of the selected Tweets user to the update textbox
+            <LineBreak/>
+            &#x25cf;
+            <Bold>ctrl-q</Bold> - Quit. Exit. Vamoose.
+            <LineBreak/>
+            &#x25cf;
+            <Bold>ctrl-o</Bold> - Open the options dialog.
+            <LineBreak/>
+            &#x25cf;
+            <Bold>ctrl-1</Bold> - Show the "Recent" tab.
+            <LineBreak/>
+            &#x25cf;
+            <Bold>ctrl-2</Bold> - Show the "Replies" tab.
+            <LineBreak/>
+            &#x25cf;
+            <Bold>ctrl-3</Bold> - Show the "User" tab.
+            <LineBreak/>
+            &#x25cf;
+            <Bold>ctrl-4</Bold> - Show the "Messages" tab.
+            <LineBreak/>
+            &#x25cf;
+            <Bold>F5</Bold> - refresh. It seemed best to stick with IE/Firefox's refresh key.
+            <LineBreak/>
+            &#x25cf;
+            <Bold>Esc</Bold> - minimize. If you are in a tweet, it minimizes the tweet. Otherwise, it minimizes the Witty window.
+          </Paragraph>
+          <Paragraph BreakPageBefore="True">
+            <Bold>Inline Autocompletion</Bold>
+            <LineBreak/>
+            Witty AutoCompletion fills in names from your friends list when it sees you start a reply or a direct 
+            message. It is triggered when you start a tweet with <Bold>d</Bold> or <Bold>D</Bold>, followed 
+            by a space, or when you type @ anywhere in the tweet. After Witty has downloaded your friend list, 
+            you can navigate through the matching friends using the &#x25b2; and &#x25bc; arrows. To select the 
+            currently matched friend, hit the tab key. To trigger AutoCompletion, press <Bold>Ctrl+Space</Bold>.
+          </Paragraph>
+        </Section>
+      </FlowDocument>
+    </FlowDocumentReader>
+  </Grid>
+</UserControl>

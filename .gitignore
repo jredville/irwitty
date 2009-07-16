@@ -1,0 +1,6 @@
+.svn
+*.cache
+*.pdb
+*.orig
+obj
+bin

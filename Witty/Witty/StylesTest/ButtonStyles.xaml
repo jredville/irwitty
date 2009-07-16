@@ -1,0 +1,31 @@
+﻿<Window
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2006" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d"
+    x:Class="Witty.StylesTest.ButtonStyles"
+    Title="Witty.StylesTest" Height="400" Width="300"
+    >
+    <Grid>
+
+		<Button VerticalAlignment="Top" Content="Button" Margin="0,18,69.377,0" HorizontalAlignment="Right" Width="100" Height="30" x:Name="NormalButton"/>
+
+		<Button VerticalAlignment="Top" Content="Button" Margin="0,72,69.377,0" HorizontalAlignment="Right" Width="100" Height="30" x:Name="MouseOverButton" Background="{DynamicResource HoverBrush}"/>
+
+		<Button Content="Button" Margin="0,132.96,69.377,0" HorizontalAlignment="Right" Width="100" x:Name="PressedButton" Height="30" d:LayoutOverrides="Height" VerticalAlignment="Top" Background="{DynamicResource PressedBrush}" BorderBrush="{DynamicResource PressedBorderBrush}"/>
+
+		<Button Content="Button" Margin="0,0,69.377,145.04" HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="100" Height="30" x:Name="DefaultedButton" IsDefault="True" BorderBrush="{DynamicResource DefaultedBorderBrush}"/>
+
+		<Button Content="Button" Margin="118.623,0,69.377,95" VerticalAlignment="Bottom" Height="30" Foreground="{DynamicResource DisabledForegroundBrush}" BorderBrush="{DynamicResource DisabledBorderBrush}" Background="{DynamicResource DisabledBackgroundBrush}"/>
+
+		<TextBlock HorizontalAlignment="Left" VerticalAlignment="Top" Text="Normal" TextWrapping="Wrap" Margin="33,25.02,0,0"/>
+
+		<TextBlock HorizontalAlignment="Left" VerticalAlignment="Top" Text="Mouse Over" TextWrapping="Wrap" Margin="33,79.02,0,0"/>
+
+		<TextBlock HorizontalAlignment="Left" Text="Pressed" TextWrapping="Wrap" Margin="31.83,139.98,0,0" d:LayoutOverrides="Height" VerticalAlignment="Top"/>
+
+		<TextBlock HorizontalAlignment="Left" Text="Defaulted" TextWrapping="Wrap" Margin="33,0,0,152.06" d:LayoutOverrides="Height" VerticalAlignment="Bottom"/>
+
+		<TextBlock HorizontalAlignment="Left" Text="Disabled" TextWrapping="Wrap" Margin="33,0,0,102.02" VerticalAlignment="Bottom"/>
+
+	</Grid>
+</Window>

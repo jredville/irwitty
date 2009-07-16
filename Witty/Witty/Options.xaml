@@ -1,0 +1,261 @@
+﻿<Window
+  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d"
+  xmlns:Witty="clr-namespace:Witty"
+  xmlns:options="clr-namespace:Witty.Controls.Options"
+  xmlns:converters="clr-namespace:Common.Converters;assembly=Common"
+  xmlns:lib="clr-namespace:Microsoft.Samples.KMoore.WPFSamples.Zap;assembly=J832.Wpf.BagOTricksLib"
+  xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+  x:Class="Witty.Options"
+  x:Name="Window"
+  Title="Witty Options"
+  Width="600" Height="450" 
+  Loaded="Window_OnLoaded"
+  KeyDown="Window_OnKeyDown" 
+  WindowStartupLocation="CenterOwner"
+  AllowsTransparency="True" Background="White"
+  WindowStyle="None"
+  ShowInTaskbar="False" ResizeMode="NoResize">
+
+    <Window.Resources>
+        <converters:RoundConverter x:Key="RoundConverter"/>
+    </Window.Resources>
+
+    <Border BorderBrush="#999" BorderThickness="1" CornerRadius="5">
+        <DockPanel x:Name="LayoutRoot">
+            <!-- Header -->
+            <Border DockPanel.Dock="Top" Padding="0,5,0,5" x:Name="HeaderBorder" Background="{DynamicResource PrimaryBackgroundBrush}">
+                <TextBlock Text="Witty Options" TextWrapping="Wrap" FontSize="18" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,2,0,0" Foreground="{DynamicResource HeaderForegroundBrush}"/>
+            </Border>
+
+            <!-- Footer -->
+            <Border DockPanel.Dock="Bottom" Padding="0,5,0,5" x:Name="FooterBorder" Background="{DynamicResource StatusBackgroundBrush}">
+                <Button Content="Done" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Width="100" IsDefault="True" x:Name="DoneButton" Click="DoneButton_Click"/>
+            </Border>
+
+            <lib:ZapScroller>
+                <lib:ZapScroller.Resources>
+
+                    <Style TargetType="{x:Type Button}" BasedOn="{StaticResource {x:Type Button}}" x:Key="pageButtonStyle">
+                        <Setter Property="Width" Value="90" />
+                        <Setter Property="Margin" Value="5" />
+                        <Setter Property="ContentTemplate">
+                            <Setter.Value>
+                                <DataTemplate>
+                                    <Border DataContext="{Binding Path=Content}">
+                                        <TextBlock Text="{Binding Path=Tag}" Margin="2" Name="test"/>
+                                    </Border>
+                                </DataTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+
+                    <Style TargetType="{x:Type ItemsControl}" x:Key="ZapScrollerCommandItemsControlStyle">
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="{x:Type ItemsControl}">
+                                    <StackPanel Orientation="Horizontal" IsItemsHost="True"/>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                        <Setter Property="ItemTemplate">
+                            <Setter.Value>
+                                <DataTemplate>
+                                    <Button Command="{Binding }" Style="{StaticResource pageButtonStyle}" Content="{Binding}"/>
+                                </DataTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+
+                </lib:ZapScroller.Resources>
+
+                <lib:ZapScroller.Template>
+                    <ControlTemplate TargetType="{x:Type lib:ZapScroller}">
+                        <DockPanel>
+                            <StackPanel Orientation="Horizontal" DockPanel.Dock="Top" HorizontalAlignment="Center" >
+                                <ItemsControl ItemsSource="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Commands}"
+                 Style="{StaticResource ZapScrollerCommandItemsControlStyle}"/>
+                            </StackPanel>
+                            <lib:ZapDecorator Name="PART_ZapDecorator">
+                                <lib:ZapPanel IsItemsHost="true" />
+                            </lib:ZapDecorator>
+                        </DockPanel>
+                    </ControlTemplate>
+                </lib:ZapScroller.Template>
+
+                <lib:ZapScroller.ItemTemplate>
+                    <DataTemplate>
+                        <Image Source="{Binding}" Margin="10"/>
+                    </DataTemplate>
+                </lib:ZapScroller.ItemTemplate>
+
+                <Border Padding="15,15,15,15" Tag="General">
+                    <StackPanel>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition />
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0">
+                                <CheckBox Content="Always on top" x:Name="AlwaysOnTopCheckBox" Click="AlwaysOnTopCheckBox_Click" />
+                                <CheckBox Content="Minimize to the Notification Area" x:Name="MinimizeToTrayCheckBox" IsChecked="{Binding Path=MinimizeToTray, ElementName=Window, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="0,10,0,0"/>
+                                <CheckBox x:Name="MinimizeOnCloseCheckBox" Margin="0,10,0,0" IsChecked="{Binding Path=MinimizeOnClose, ElementName=Window, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">Minimize on close button</CheckBox>
+                            </StackPanel>
+                            <StackPanel Grid.Column="1">
+                                <CheckBox Content="Play Sounds on new Tweets" x:Name="PlaySoundsCheckBox" IsChecked="{Binding Path=PlaySounds, ElementName=Window, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                <CheckBox Content="Smooth Scrolling" x:Name="SmoothScrollingCheckBox" IsChecked="{Binding Path=SmoothScroll, ElementName=Window, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="0,10,0,0" />
+                                <CheckBox Content="Run at Startup" x:Name="RunAtStartupCheckBox" IsChecked="{Binding Path=RunAtStartup, ElementName=Window, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="0,10,0,0" />
+                            </StackPanel>
+                        </Grid>
+                        <DockPanel HorizontalAlignment="Left" Margin="0,10,0,0">
+                            <Label Content="_Refresh Interval" Target="{Binding ElementName=RefreshComboBox}" VerticalAlignment="Center" Margin="0,0,5,0" Padding="5,2" />
+                            <ComboBox x:Name="RefreshComboBox" Width="Auto" MinHeight="15" />
+                        </DockPanel>
+                        <DockPanel HorizontalAlignment="Left" Margin="0,10,0,0">
+                            <Label Content="_Skin" Target="{Binding ElementName=SkinsComboBox}" VerticalAlignment="Center" Margin="0,0,5,0" Padding="5,2" />
+                            <ComboBox x:Name="SkinsComboBox" SelectionChanged="SkinsComboBox_SelectionChanged" Width="Auto" MinHeight="15" />
+                        </DockPanel>
+                        <DockPanel HorizontalAlignment="Left" Margin="0,10,0,0">
+                            <Label Content="_Url Service" Target="{Binding ElementName=UrlServiceComboBox}" VerticalAlignment="Center" Margin="0,0,5,0" Padding="5,2"/>
+                            <ComboBox x:Name="UrlServiceComboBox" SelectionChanged="UrlServiceComboBox_SelectionChanged"  Width="Auto" />
+                        </DockPanel>
+                        <DockPanel HorizontalAlignment="Left" Margin="0,10,0,0">
+                            <Label Content="_Retweet Prefix" Target="{Binding ElementName=RetweetComboBox}" VerticalAlignment="Center" Margin="0,0,5,0" Padding="5,2"/>
+                            <ComboBox x:Name="RetweetComboBox"  Width="Auto" IsEditable="True"></ComboBox>
+                        </DockPanel>
+                        <DockPanel HorizontalAlignment="Left" Margin="0,10,0,0">
+                            <Label Content="Re_ply Prefix" Target="{Binding ElementName=RetweetComboBox}" VerticalAlignment="Center" Margin="0,0,5,0" Padding="5,2"/>
+                            <ComboBox x:Name="ReplyComboBox"  Width="Auto" IsEditable="True"></ComboBox>
+                        </DockPanel>
+                    </StackPanel>
+                </Border>
+
+                <Border Padding="15,15,15,15" Tag="Connection">
+                    <StackPanel>
+                        <GroupBox Header="Login Info">
+                            <StackPanel>
+                                <DockPanel>
+                                    <Label Content="_TwitterHost" Width="75" Target="{Binding ElementName=TwitterHostTextBox}" />
+                                    <TextBox x:Name="TwitterHostTextBox" TextWrapping="Wrap" IsEnabled="True" Width="250" HorizontalAlignment="Left"/>
+                                </DockPanel>
+                                <DockPanel Margin="0,5,0,0">
+                                    <Label Content="_Username" Width="75" Target="{Binding ElementName=UsernameTextBox}" />
+                                    <TextBox x:Name="UsernameTextBox" TextWrapping="Wrap" IsEnabled="False" Width="150" HorizontalAlignment="Left"/>
+                                    <Label Content="_Password" Width="75" Target="{Binding ElementName=UsernameTextBox}" />
+                                    <PasswordBox x:Name="PasswordTextBox" IsEnabled="False" Width="150" HorizontalAlignment="Left"/>
+                                </DockPanel>
+                                <CheckBox Content="Remember me on this computer" x:Name="PersistLoginCheckBox" IsChecked="{Binding Path=PersistLogin, ElementName=Window, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="5,5,0,0" />
+                                <Button Content="Logout" x:Name="Logout" Click="Logout_Click" Width="75" Height="21.96" HorizontalAlignment="Left" Margin="0,10,0,0"/>
+                            </StackPanel>
+                        </GroupBox>
+                        <GroupBox Header="Proxy Info" Margin="0,5,0,0">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="100"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+                                <CheckBox Grid.Row="0" Grid.ColumnSpan="2" Content="Use Proxy Server" x:Name="UseProxyCheckBox" Click="UseProxyCheckBox_Click" HorizontalAlignment="Left" Grid.Column="1" Margin="5,0,0,0"/>
+                                <Label Content="Server" HorizontalAlignment="Right" Grid.Column="0" Grid.Row="1"/>
+                                <TextBox x:Name="ProxyServerTextBox" TextWrapping="Wrap" Margin="5,2,20,2" IsEnabled="False" Grid.Column="1" Grid.Row="1"/>
+                                <Label Content="Port" HorizontalAlignment="Right" Grid.Column="0" Grid.Row="2"/>
+                                <TextBox x:Name="ProxyPortTextBox" TextWrapping="Wrap" Margin="5,2,20,2" IsEnabled="False" Grid.Column="1" Grid.Row="2" Width="75" HorizontalAlignment="Left" />
+                                <Label Content="Username" HorizontalAlignment="Right" Grid.Column="0" Grid.Row="3"/>
+                                <TextBox x:Name="ProxyUsernameTextBox" TextWrapping="Wrap" Margin="5,2,20,2" IsEnabled="False" Grid.Column="1" Grid.Row="3"/>
+                                <Label Content="Password" HorizontalAlignment="Right" Grid.Column="0" Grid.Row="4"/>
+                                <PasswordBox x:Name="ProxyPasswordTextBox" Margin="5,2,20,2" IsEnabled="False" Grid.Column="1" Grid.Row="4"/>
+                            </Grid>
+                        </GroupBox>
+                    </StackPanel>
+                </Border>
+
+                <Border Padding="15,15,15,15" Tag="Tweets">
+                    <StackPanel>
+                        <GroupBox Header="Clear Tweets" Margin="0,15,0,0">
+                            <StackPanel Margin="0,10,0,10" Orientation="Horizontal">
+                                <Button x:Name="ClearTweetsButton" Width="120" Height="20" Content="Clear All Tweets" Click="ClearTweetsButton_Click" HorizontalAlignment="Left"/>
+                                <Button x:Name="ClearRepliesButton" Width="120" Height="20" Content="Clear All Replies" Click="ClearRepliesButton_Click" HorizontalAlignment="Left" Margin="5"/>
+                                <Label Target="{Binding ElementName=SkinsComboBox}" Content="Keep Latest" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                                <ComboBox x:Name="KeepLatestComboBox" Height="23" Width="120">
+                                    <ComboBoxItem Content="10"/>
+                                    <ComboBoxItem Content="50"/>
+                                    <ComboBoxItem Content="100" Selector.IsSelected="True" />
+                                    <ComboBoxItem Content="All"/>
+                                </ComboBox>
+                            </StackPanel>
+                        </GroupBox>
+                        <GroupBox Header="Filter Tweets">
+                            <StackPanel>
+                                <TextBlock Foreground="Gray" FontStyle="Italic"  TextWrapping="Wrap">
+                    Hide tweets containing words or usernames you'd rather not see. Separate words with the pipe character, like this: politics|football|television. Nerds: you can use a regular expression here.
+                                </TextBlock>
+                                <TextBox x:Name="FilterRegex" TextWrapping="Wrap" Margin="5,2,20,2" IsEnabled="True" AutoWordSelection="True" MinLines="2" />
+                            </StackPanel>
+                        </GroupBox>
+                        <GroupBox Header="Highlight Tweets">
+                            <StackPanel>
+                                <TextBlock Foreground="Gray" FontStyle="Italic"  TextWrapping="Wrap">
+                            Highlight tweets from users or containing words you find interesting. Separate words with the pipe character. Regular expressions are allowed.
+                                </TextBlock>
+                                <TextBox x:Name="HightlightRegex" TextWrapping="Wrap" Margin="5,2,20,2" IsEnabled="True" AutoWordSelection="True" MinLines="2" />
+                            </StackPanel>
+                        </GroupBox>
+                    </StackPanel>
+                </Border>
+
+                <Border Padding="15,15,15,15" Tag="Notifications" >
+                    <StackPanel>
+                        <CheckBox Content="Display notifications" x:Name="DisplayNotificationsCheckBox" IsChecked="{Binding Path=DisplayNotifications, ElementName=Window, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                        <DockPanel LastChildFill="False">
+                            <Label x:Name="_MaxIndAlerts" VerticalAlignment="Top" Width="Auto" Height="Auto" Content="Maximum Individual Notifications:"/>
+                            <Slider x:Name="MaxIndSlider" VerticalAlignment="Top" Width="Auto" Height="Auto" LargeChange="5" Maximum="25" Minimum="1" SmallChange="1" TickFrequency="2" TickPlacement="BottomRight"/>
+                            <TextBlock Margin="10,5,10,5" x:Name="MaxIndTextBlock" VerticalAlignment="Top" Width="20" Height="20" Text="{Binding Path=Value, Converter={StaticResource RoundConverter}, ElementName=MaxIndSlider, Mode=Default}" TextAlignment="Center" TextWrapping="Wrap"/>
+                        </DockPanel>
+                        <DockPanel LastChildFill="False">
+                            <Label x:Name="_NotificationDisplayTime" VerticalAlignment="Top" Width="Auto" Height="Auto" Content="Number of seconds to display notifications:"/>
+                            <Slider x:Name="NotificationDisplayTimeSlider" VerticalAlignment="Top" Width="Auto" Height="Auto" LargeChange="5" Maximum="60" Minimum="1" SmallChange="1" TickFrequency="5" TickPlacement="BottomRight"/>
+                            <TextBlock Margin="10,5,10,5" x:Name="NotificationDisplayTimeTextBlock" VerticalAlignment="Top" Width="20" Height="20" Text="{Binding Path=Value, Converter={StaticResource RoundConverter}, ElementName=NotificationDisplayTimeSlider, Mode=Default}" TextAlignment="Center" TextWrapping="Wrap"/>
+                        </DockPanel>
+                        <DockPanel LastChildFill="False" Margin="10, 10, 0, 10">
+                            <CheckBox x:Name="AlertSelectedOnlyCheckBox">Alert Selected Users Only</CheckBox>
+                        </DockPanel>
+                        <GroupBox Header="Friend Options">
+                            <DockPanel LastChildFill="False">
+                                <ComboBox x:Name="FriendsOptionsComboBox" VerticalAlignment="Top" SelectionChanged="FriendsOptionsComboBox_SelectionChanged" Margin="10,10,10,10" />
+                                <CheckBox x:Name="FriendIgnoreCheckBox" Margin="10, 10, 10, 10" 
+						Checked="FriendIgnoreCheckBox_Clicked" Unchecked="ClearBehaviors">
+                                    Ignore</CheckBox>
+                                <CheckBox x:Name="FriendNeverAlertCheckbox" Margin="10, 10, 10, 10"
+						Checked="FriendNeverAlertCheckbox_Clicked" Unchecked="ClearBehaviors">
+                                    Never Alert</CheckBox>
+                                <CheckBox x:Name="FriendAlwaysAlertCheckbox" Margin="10, 10, 10, 10" 
+						Checked="FriendAlwaysAlertCheckbox_Clicked" Unchecked="ClearBehaviors">
+                                    Always Alert</CheckBox>
+                            </DockPanel>
+                        </GroupBox>
+                    </StackPanel>
+                </Border>
+
+                <Border Padding="15,15,15,15" Tag="Updates">
+                    <StackPanel>
+                        <options:ClickOnceOptions x:Name="ClickOnceOptions"/>
+                    </StackPanel>
+                </Border>
+
+                <Border Tag="About">
+                    <Grid>
+                        <options:AboutOptions x:Name="AboutOptions"/>
+                    </Grid>
+                </Border>
+
+            </lib:ZapScroller>
+        </DockPanel>
+    </Border>
+</Window>

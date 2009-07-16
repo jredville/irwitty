@@ -1,0 +1,69 @@
+﻿<Window x:Class="WittyTestBed.tweetscan"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    Title="tweetscan" Height="300" Width="300">
+  <Window.Resources>
+    <DataTemplate x:Key="TweetsTemplate">
+      <DataTemplate.Resources>
+        <Storyboard x:Key="YellowFade">
+          <ColorAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="grid" Storyboard.TargetProperty="(Panel.Background).(SolidColorBrush.Color)">
+            <SplineColorKeyFrame KeyTime="00:00:00" Value="#FFFEFF76" />
+            <SplineColorKeyFrame KeyTime="00:00:01" Value="#19FEFF76" />
+          </ColorAnimationUsingKeyFrames>
+        </Storyboard>
+      </DataTemplate.Resources>
+      <Grid x:Name="grid" Background="#01FFFFFF">
+        <Grid.ColumnDefinitions>
+          <ColumnDefinition Width="70" />
+          <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+          <RowDefinition Height="Auto" />
+          <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Grid Grid.RowSpan="2" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5,5,0,0" Width="58" Height="60">
+            <Rectangle Stroke="#FF8E8E8E" RadiusX="10" RadiusY="5">
+              <Rectangle.Fill>
+                <LinearGradientBrush EndPoint="0.869,0.837" StartPoint="0.278,0.298">
+                  <GradientStop Color="#FFFFFFFF" Offset="0" />
+                  <GradientStop Color="#FF7BB2B7" Offset="1" />
+                </LinearGradientBrush>
+              </Rectangle.Fill>
+            </Rectangle>
+          <Border Width="50" Height="50" Background="#FFF" BorderBrush="{DynamicResource ImageBorderBrush}" BorderThickness="1" CornerRadius="2">
+            <Image Width="48" Height="48" Source="{Binding Path=User.ImageUrl}" x:Name="UserImage" />
+          </Border>
+        </Grid>
+        <DockPanel Grid.Row="0" Grid.Column="1" VerticalAlignment="Top">
+          <TextBlock Text="{Binding Path=User.ScreenName, FallbackValue=Screen Name}" FontWeight="Bold" FontSize="16" VerticalAlignment="Bottom" HorizontalAlignment="Left" x:Name="ScreenName" Cursor="Hand" ToolTip="View this user's recent tweets" />
+        <Button Width="20" Height="20" HorizontalAlignment="Right" Margin="0,0,5,0" Visibility="Collapsed" x:Name="ReplyButton">
+            <TextBlock TextWrapping="Wrap" Text="@" VerticalAlignment="Center" x:Name="textBlock" />
+        </Button>
+      </DockPanel>
+        <WrapPanel Grid.Column="1" Grid.Row="1">
+          <TextBlock x:Name="TweetText" Text="{Binding Path=Text, FallbackValue=Tweet Text}" TextWrapping="Wrap" Margin="0,0,5,0" />
+          <TextBlock Text="{Binding Path=RelativeTime, FallbackValue=1 minute ago}" FontStyle="Italic" Margin="0,0,3.5,0" Foreground="{DynamicResource SubForegroundBrush}" ToolTip="{Binding Path=DateCreated, Mode=Default}" />
+        <TextBlock Text="{Binding Path=Source, Mode=Default, FallbackValue=from web}" FontStyle="Italic" TextTrimming="CharacterEllipsis" Foreground="{DynamicResource SubForegroundBrush}" />
+      </WrapPanel>
+      </Grid>
+      <DataTemplate.Triggers>
+        <Trigger Property="IsMouseOver" Value="True" SourceName="ScreenName">
+          <Setter Property="Foreground" Value="#FF177E8C" TargetName="ScreenName"/>
+        </Trigger>
+        <DataTrigger Binding="{Binding Path=IsNew}" Value="True">
+          <DataTrigger.EnterActions>
+            <BeginStoryboard Storyboard="{StaticResource YellowFade}" x:Name="YellowFade_BeginStoryboard" />
+          </DataTrigger.EnterActions>
+        </DataTrigger>
+      </DataTemplate.Triggers>
+    </DataTemplate>
+
+  </Window.Resources>
+    <DockPanel>
+		<DockPanel LastChildFill="False" DockPanel.Dock="Top">
+			<TextBox Text="" TextWrapping="Wrap" Width="150" Margin="5,5,5,5" x:Name="SearchTextBox"/>
+			<Button Content="Search" Click="Button_Click" Margin="5,5,5,5"/>
+		</DockPanel>
+    	<ListBox x:Name="TweetsListBox" ItemTemplate="{DynamicResource TweetsTemplate}" />
+	</DockPanel>
+</Window>
