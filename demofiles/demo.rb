@@ -1,3 +1,13 @@
+#####################
+#Interop
+#####################
+dir = "C:\\Users\\jdeville\\projects\\irwitty\\demofiles"
+Dir.chdir(dir)
+spelling = IronRuby.require 'spelling'
+spelling.correct.call('speling'.to_clr_string)
+##############
+#Hosting
+##############
 require 'IronPython'
 dir = "C:\\Users\\jdeville\\projects\\irwitty\\demofiles"
 e = nil
@@ -13,4 +23,3 @@ class << e
 end
 
 e.correct "speling"
-
